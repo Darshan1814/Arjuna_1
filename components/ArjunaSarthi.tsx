@@ -1,4 +1,4 @@
-// [stage-19] feat(assistant): create Arjuna Sarthi floating assistant component with query drawer
+// [stage-21] feat(assistant): implement 1-click repo loading action from Arjuna Sarthi recommendations
 "use client";
 
 import { useState, useCallback } from "react";
