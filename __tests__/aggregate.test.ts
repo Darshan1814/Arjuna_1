@@ -1,4 +1,3 @@
-// [stage-51] test(unit): create aggregate test suite validating commit sampling algorithms
 import { describe, it, expect } from "vitest";
 import {
   computeLanguagePercentages,
