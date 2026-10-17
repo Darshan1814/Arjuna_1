@@ -1,4 +1,4 @@
-// [stage-42] feat(dashboard): sync active repository state with URL searchParams for shareable links
+// [stage-45] refactor(dashboard): mount ArjunaSarthi and ReadmeViewer in root layout flow
 "use client";
 
 import { useState, useEffect, useCallback, Suspense } from "react";
