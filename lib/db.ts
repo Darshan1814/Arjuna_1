@@ -1,4 +1,3 @@
-// [stage-33] feat(db): implement node:sqlite search history persistence with FIFO eviction
 import { DatabaseSync } from "node:sqlite";
 import fs from "node:fs";
 import path from "node:path";
