@@ -17,27 +17,27 @@
   <a href="https://docker.com"><img src="https://img.shields.io/badge/Docker-Multi--Stage_Alpine-2496ED?style=for-the-badge&logo=docker" alt="Docker" /></a>
   <a href="https://jenkins.io"><img src="https://img.shields.io/badge/Jenkins-Declarative_CI%2FCD-D24939?style=for-the-badge&logo=jenkins" alt="Jenkins" /></a>
   <a href="https://kubernetes.io"><img src="https://img.shields.io/badge/Kubernetes-AWS_EKS_ReplicaSets-326CE5?style=for-the-badge&logo=kubernetes" alt="Kubernetes" /></a>
+  <a href="https://aws.amazon.com/ec2"><img src="https://img.shields.io/badge/AWS_EC2-Compute_Cluster-FF9900?style=for-the-badge&logo=amazonec2" alt="AWS EC2" /></a>
   <a href="https://vercel.com"><img src="https://img.shields.io/badge/Deployment-Vercel_Live-000000?style=for-the-badge&logo=vercel" alt="Vercel Ready" /></a>
 </p>
 
 ---
 
-## 📌 Submission Overview
+## 📌 Project Overview & Quick Links
 
 | **Attribute** | **Details** |
 |---|---|
 | **Event** | **ACM Student Chapter Online Buildathon** |
-| **Duration** | Single Round • 8 Hours (10:00 AM – 5:55 PM IST) |
 | **Team Name** | **Arjuna_1** |
 | **Project Name** | **GitStory** |
 | **Repository** | [https://github.com/Darshan1814/Arjuna_1](https://github.com/Darshan1814/Arjuna_1) |
 | **Live Deployed Application** | [https://arjuna-1.vercel.app](https://arjuna-1.vercel.app) |
 | **Demo Video Walkthrough** | [https://youtu.be/miu00zCs5is](https://youtu.be/miu00zCs5is) |
-| **Final Release Cutoff** | On or before 6:20 PM IST (Strict Compliance) |
+| **SonarCloud Quality Gate** | **PASSED** (0 Security Hotspots, 0 Vulnerabilities) |
 
 ---
 
-## 👥 Team Members
+## 👥 Team Members & Responsibilities
 
 | Member | Role | GitHub Handle | Key Responsibilities |
 |---|---|---|---|
@@ -84,11 +84,142 @@ Every technology in the GitStory ecosystem was deliberate, vetted, and selected 
 | **Vitest** | <img src="https://img.shields.io/badge/Vitest-FCC72B?style=flat&logo=vitest" height="20" /> | Native ESM test runner sharing Vite/Turbopack transform pipelines; executes all 27 unit tests in <900ms with zero test-runner overhead. | **Jest**: Rejected due to slow CommonJS transpilation, Babel dependency baggage, and sluggish startup times. |
 | **Docker (Multi-Stage Alpine)** | <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker" height="20" /> | Multi-stage image build shrinks container image to ~120MB, runs as non-root user `nextjs`, and eliminates host dependency discrepancies. | **Single-stage Docker**: Rejected because shipping `node_modules` and build tooling inflates image size to >1.1GB, slowing down CI/CD deployments. |
 | **Jenkins Declarative Pipeline** | <img src="https://img.shields.io/badge/Jenkins-D24939?style=flat&logo=jenkins" height="20" /> | Standard enterprise CI/CD orchestration automating test execution, container image builds, AWS ECR tagging, and zero-downtime Kubernetes deployments. | **Manual Shell Scripts**: Rejected due to lack of stage traceability, audit logs, and automated rollback capabilities. |
-| **Kubernetes (AWS EKS)** | <img src="https://img.shields.io/badge/Kubernetes_AWS_EKS-326CE5?style=flat&logo=kubernetes" height="20" /> | Provides feature-segregated ReplicaSets for Web UI, Telemetry API, and AI Assistant, paired with Horizontal Pod Autoscalers (HPA) for fault isolation. | **Single Monolithic Pod**: Rejected because a spike in heavy AI inference or upstream GitHub polling would degrade web UI responsiveness. |
+| **Kubernetes (AWS EKS & EC2)** | <img src="https://img.shields.io/badge/Kubernetes_AWS_EKS-326CE5?style=flat&logo=kubernetes" height="20" /> | Provides feature-segregated ReplicaSets for Web UI, Telemetry API, and AI Assistant, paired with Horizontal Pod Autoscalers (HPA) for fault isolation. | **Single Monolithic Pod**: Rejected because a spike in heavy AI inference or upstream GitHub polling would degrade web UI responsiveness. |
 
 ---
 
-## 🏗️ System Architecture & Data Flow
+## 🚀 CI/CD Pipeline & GitHub Webhook Trigger Flow
+
+The following sequence diagram illustrates the automated continuous integration and continuous deployment (CI/CD) lifecycle triggered by GitHub commits, executing on an AWS EC2 Jenkins node, containerizing via Docker, and rolling out across Amazon EKS feature ReplicaSets:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Dev as Developers (Darshan, Swamini, Janhavi)
+    participant GH as GitHub Repository (Darshan1814/Arjuna_1)
+    participant Webhook as GitHub Webhook
+    participant Jenkins as Jenkins CI/CD (AWS EC2 Instance)
+    participant Docker as Docker Engine (Multi-Stage Alpine)
+    participant ECR as AWS Elastic Container Registry (ECR)
+    participant EKS as Amazon EKS Cluster (Kubernetes)
+    participant Vercel as Vercel Edge Platform
+
+    Dev->>GH: git push origin (main / features / hotfix)
+    par Simultaneous Vercel Edge Deployment
+        GH->>Vercel: Automatic Webhook Trigger
+        Vercel->>Vercel: Turbopack Build & Edge Global Distribution
+    and AWS Enterprise Cloud Pipeline
+        GH->>Webhook: Webhook Push Event (JSON Payload)
+        Webhook->>Jenkins: Trigger Declarative Pipeline
+        Jenkins->>Jenkins: Stage 1: Validate Node 22 & Clean Workspace
+        Jenkins->>Jenkins: Stage 2: Parallel ESLint & Vitest (27 Passing Tests)
+        Jenkins->>Docker: Stage 3: Multi-Stage Dockerfile Compilation
+        Docker->>Docker: Build Next.js Standalone Runner (120MB)
+        Docker->>Jenkins: Production Image Ready (arjuna-1/gitstory:1.0.0)
+        Jenkins->>ECR: Stage 4: Authenticate & Push Tagged Image
+        ECR-->>Jenkins: Image Manifest Stored
+        Jenkins->>EKS: Stage 5: kubectl apply -f k8s/ (Feature ReplicaSets)
+        EKS->>EKS: Rolling Update across Web, API & AI Pods
+        Jenkins->>EKS: Stage 6: Rollout Validation & Pod Health Verification
+        EKS-->>Jenkins: Deployment Healthy (0 Downtime)
+    end
+```
+
+---
+
+## ☸️ Enterprise AWS Multi-ReplicaSet Kubernetes Architecture
+
+To ensure resilient high-availability, zero-downtime rolling updates, and micro-service fault isolation, GitStory runs on an **Amazon EKS cluster hosted on AWS EC2 worker instances**, segregating the application into **three distinct feature ReplicaSets**:
+
+```mermaid
+flowchart TD
+    subgraph Users ["End Users & Developers"]
+        Client["Web Browsers & Mobile Clients"]
+    end
+
+    subgraph AWS_Cloud ["Amazon Web Services (AWS Infrastructure)"]
+        R53["Amazon Route 53 (DNS Management)"]
+        
+        subgraph Networking ["AWS VPC & Networking"]
+            ALB["AWS Application Load Balancer (ALB Ingress Controller)\nPath-based Routing Engine"]
+        end
+
+        subgraph EC2_Compute ["Amazon EC2 Worker Node Cluster (Auto Scaling Group)"]
+            subgraph K8S_Cluster ["Amazon EKS Cluster (Namespace: gitstory-prod)"]
+                
+                subgraph RS_Web ["Feature ReplicaSet 1: Web UI Dashboard"]
+                    PodW1["Pod: gitstory-web-1\n(Port 3000)"]
+                    PodW2["Pod: gitstory-web-2\n(Port 3000)"]
+                    PodW3["Pod: gitstory-web-3\n(Port 3000)"]
+                end
+                
+                subgraph RS_API ["Feature ReplicaSet 2: Git Telemetry Engine"]
+                    PodA1["Pod: gitstory-api-1\n(Port 3000)"]
+                    PodA2["Pod: gitstory-api-2\n(Port 3000)"]
+                    PodA3["Pod: gitstory-api-3\n(Port 3000)"]
+                end
+
+                subgraph RS_AI ["Feature ReplicaSet 3: Arjuna Sarthi AI Agent"]
+                    PodAI1["Pod: gitstory-ai-1\n(Port 3000)"]
+                    PodAI2["Pod: gitstory-ai-2\n(Port 3000)"]
+                end
+
+                HPA["Horizontal Pod Autoscaler (HPA)\nTarget: 70-80% CPU Utilization"]
+                ConfigMap["ConfigMap: gitstory-config\n(NODE_ENV, PORT, SQLITE_PATH)"]
+                Secrets["Secret: gitstory-secrets\n(GITHUB_TOKEN, GROQ_API_KEY)"]
+            end
+        end
+
+        subgraph DevOps_EC2 ["Dedicated AWS EC2 Instance"]
+            JenkinsServer["Jenkins CI/CD Server\n(Automated Pipeline Orchestrator)"]
+            DockerEngine["Docker Engine\n(Container Builder & Daemon)"]
+        end
+
+        subgraph Container_Registry ["AWS Container Services"]
+            ECR["AWS Elastic Container Registry (ECR)\narjuna-1/gitstory:1.0.0"]
+        end
+    end
+
+    subgraph External_APIs ["Upstream Cloud Providers"]
+        GH_API["GitHub REST API v3\n(Authenticated / Cached)"]
+        Groq_API["Groq Cloud LPU Inference\n(Llama 3.3 70B Versatile)"]
+        Vercel_Edge["Vercel Global Edge Network\n(Public Live Deployment)"]
+    end
+
+    Client -->|HTTPS / DNS| R53
+    R53 --> ALB
+    Client -.->|Public Edge Route| Vercel_Edge
+
+    ALB -->|Route: / | RS_Web
+    ALB -->|Route: /api/repo, /api/activity, /api/commits| RS_API
+    ALB -->|Route: /api/assistant, /api/summary, /api/readme| RS_AI
+
+    HPA -.-> RS_Web
+    HPA -.-> RS_API
+    HPA -.-> RS_AI
+
+    ConfigMap -.-> RS_Web & RS_API & RS_AI
+    Secrets -.-> RS_Web & RS_API & RS_AI
+
+    JenkinsServer --> DockerEngine
+    DockerEngine -->|Push Image Tag| ECR
+    ECR -->|Pull Verified Image| K8S_Cluster
+
+    RS_API --> GH_API
+    RS_AI --> GH_API & Groq_API
+```
+
+### ReplicaSet Feature Isolation Breakdown
+
+| Feature ReplicaSet | Kubernetes Manifest | Desired Pods | Resource Allocation | Functional Responsibility |
+|---|---|:---:|---|---|
+| **Web UI Dashboard** | [`k8s/replicaset-web.yaml`](k8s/replicaset-web.yaml) | **3 Pods** | 250m CPU / 256Mi RAM | Server-side rendering (SSR), dynamic HTML streaming, and responsive Recharts rendering |
+| **Telemetry & Aggregation API** | [`k8s/replicaset-api-telemetry.yaml`](k8s/replicaset-api-telemetry.yaml) | **3 Pods** | 300m CPU / 384Mi RAM | Upstream GitHub REST API batching, commit churn sampling, and SQLite search cache |
+| **Arjuna Sarthi AI Assistant** | [`k8s/replicaset-ai-assistant.yaml`](k8s/replicaset-ai-assistant.yaml) | **2 Pods** | 250m CPU / 256Mi RAM | Conversational topic recommendation, natural language search sanitization, and README executive briefs |
+
+---
+
+## 🏛️ Application Architecture & Data Flow
 
 ```mermaid
 flowchart TD
@@ -99,29 +230,14 @@ flowchart TD
         RM["README Explorer & AI Tabs"]
     end
 
-    subgraph AWS_EKS ["Enterprise Kubernetes Cluster (AWS EKS)"]
-        subgraph Ingress ["AWS ALB Ingress Controller"]
-            ALB["Application Load Balancer"]
-        end
-
-        subgraph ReplicaSet_Web ["Feature ReplicaSet 1: Web UI (3 Pods)"]
-            W1["gitstory-web-pod-1"]
-            W2["gitstory-web-pod-2"]
-            W3["gitstory-web-pod-3"]
-        end
-
-        subgraph ReplicaSet_API ["Feature ReplicaSet 2: Telemetry API (3 Pods)"]
-            A1["gitstory-api-pod-1"]
-            A2["gitstory-api-pod-2"]
-            A3["gitstory-api-pod-3"]
-        end
-
-        subgraph ReplicaSet_AI ["Feature ReplicaSet 3: Arjuna Sarthi AI (2 Pods)"]
-            AI1["gitstory-ai-pod-1"]
-            AI2["gitstory-ai-pod-2"]
-        end
-
-        HPA["Horizontal Pod Autoscaler (HPA)\nTarget: 70-80% CPU"]
+    subgraph Server ["Server & API Layer (Next.js App Router)"]
+        R_Repo["/api/repo (Metadata & Languages)"]
+        R_Act["/api/activity (52-Wk Commits & Contributors)"]
+        R_Com["/api/commits (Recent Commits & Hot Files)"]
+        R_Sum["/api/summary (AI Technical Narrative)"]
+        R_Readme["/api/readme & /api/readme/summary"]
+        R_Asst["/api/assistant (GitHub Topic Search + AI)"]
+        R_Hist["/api/history (SQLite FIFO Cache)"]
     end
 
     subgraph Storage ["Persistent Storage Layer"]
@@ -130,59 +246,22 @@ flowchart TD
 
     subgraph External ["Upstream Cloud Services"]
         GH["GitHub REST API v3\n(Authenticated / Cached)"]
-        Groq["Groq Cloud Inference Engine\n(Llama 3.3 70B Versatile)"]
+        Groq["Groq Cloud AI Engine\n(Llama 3.3 70B Versatile)"]
     end
 
-    UI --> ALB
-    AS --> ALB
-    RM --> ALB
+    UI --> R_Repo & R_Act & R_Com & R_Hist
+    AS --> R_Asst
+    RM --> R_Readme
+    UI --> R_Sum
 
-    ALB -->|/ | ReplicaSet_Web
-    ALB -->|/api/repo, /api/activity, /api/commits| ReplicaSet_API
-    ALB -->|/api/assistant, /api/summary, /api/readme/summary| ReplicaSet_AI
-
-    ReplicaSet_API --> GH
-    ReplicaSet_API --> DB
-    ReplicaSet_AI --> GH & Groq
-    ReplicaSet_AI --> DB
-
-    HPA -.-> ReplicaSet_Web
-    HPA -.-> ReplicaSet_API
-    HPA -.-> ReplicaSet_AI
+    R_Repo --> GH
+    R_Act --> GH
+    R_Com --> GH
+    R_Readme --> GH & Groq
+    R_Asst --> GH & Groq
+    R_Sum --> Groq
+    R_Hist --> DB
 ```
-
----
-
-## ☸️ Enterprise AWS Deployment Architecture (Docker, Jenkins, Kubernetes)
-
-To meet the highest deployment standards for AWS cloud infrastructure, GitStory includes a complete production DevOps suite:
-
-### 1. Multi-Stage Docker Build (`Dockerfile`)
-- **Stage 1 (deps)**: Installs production and build dependencies on `node:22-alpine` using `npm ci`.
-- **Stage 2 (builder)**: Compiles the Next.js App Router with Turbopack, generating a standalone output bundle.
-- **Stage 3 (runner)**: Minimal runtime container (~120MB) executing as non-root user `nextjs` (UID 1001) for container security compliance, with automated HTTP health checking.
-
-### 2. Jenkins Enterprise CI/CD Pipeline (`Jenkinsfile`)
-- **Stage 1**: Dependency validation and Node.js environment checks.
-- **Stage 2**: Parallel linting (`npm run lint`) and Vitest unit testing (`npx vitest run`).
-- **Stage 3**: Standalone Next.js production build (`npm run build`).
-- **Stage 4**: Docker multi-stage image packaging.
-- **Stage 5**: AWS ECR authentication and image push with unique commit SHA tags.
-- **Stage 6**: AWS EKS cluster deployment updating feature-segregated ReplicaSets.
-- **Stage 7**: Smoke testing and rollout validation via `kubectl rollout status`.
-
-### 3. Kubernetes Feature-Segregated ReplicaSets (`k8s/`)
-In compliance with the architecture guidelines, the application features are separated into dedicated ReplicaSets and Deployments for resilient fault tolerance:
-
-| Component | Manifest | Replicas | Role |
-|---|---|:---:|---|
-| **Web UI Dashboard** | [`k8s/replicaset-web.yaml`](k8s/replicaset-web.yaml) | **3** | Server-side rendering, HTML streaming, static asset distribution |
-| **Telemetry & Aggregation API** | [`k8s/replicaset-api-telemetry.yaml`](k8s/replicaset-api-telemetry.yaml) | **3** | Upstream GitHub REST API batching, hot files churn detection, SQLite search cache |
-| **Arjuna Sarthi AI Assistant** | [`k8s/replicaset-ai-assistant.yaml`](k8s/replicaset-ai-assistant.yaml) | **2** | Asynchronous conversational LLM inference and README executive synthesis |
-| **Services** | [`k8s/services.yaml`](k8s/services.yaml) | — | Internal ClusterIP routing across web, api, and ai micro-services |
-| **AWS Ingress Controller** | [`k8s/ingress.yaml`](k8s/ingress.yaml) | — | AWS Application Load Balancer (ALB) path-based routing |
-| **Autoscaling (HPA)** | [`k8s/hpa.yaml`](k8s/hpa.yaml) | 2–12 | Dynamic horizontal scaling triggered by CPU/Memory thresholds |
-| **Config & Secrets** | [`k8s/configmap.yaml`](k8s/configmap.yaml), [`k8s/secrets.yaml`](k8s/secrets.yaml) | — | Enterprise configuration and credential segregation |
 
 ---
 
@@ -241,9 +320,8 @@ Arjuna_1/
 │   │   ├── readme/summary/route.ts  # README 4-pillar AI executive brief
 │   │   ├── repo/route.ts            # Repository metadata & language bytes
 │   │   └── summary/route.ts         # Technical narrative AI synthesis
-│   ├── favicon.ico
 │   ├── globals.css                  # Design system tokens & animations
-│   ├── icon.svg                     # App SVG favicon
+│   ├── icon.svg                     # High-definition SVG application icon
 │   ├── layout.tsx                   # Metadata, Geist fonts, Theme Provider
 │   └── page.tsx                     # Main GitStory dashboard container
 ├── components/
@@ -354,12 +432,12 @@ npm run build
 
 ## 🌿 Git Branching Strategy & Workflow
 
-GitStory strictly followed a feature-branch and trunk-based integration workflow across all 3 team members throughout the Buildathon:
+GitStory strictly followed a feature-branch and trunk-based integration workflow across all 3 team members:
 
 ```text
-  main        ●───●───●───────●───────●───────●───●───● [Official Vercel & AWS Release]
+  main        ●───●───●───────●───────●───────●───●───● [Official Vercel & AWS Production Release]
                    \         /       /       /       /
-  hotfix            \       /       /       ●───●───● [Bugfixes & Final README Links]
+  hotfix            \       /       /       ●───●───● [DevOps Hardening & Final Submission Polish]
                      \     /       /
   testing             \   /       ●───────● [Vitest Suites & Edge Cases]
                        \ /
@@ -378,13 +456,13 @@ GitStory strictly followed a feature-branch and trunk-based integration workflow
 
 ## 🏆 ACM Buildathon Compliance Checklist
 
-- [x] **Submission Deadline Compliance**: Final commit timestamped strictly on or before 6:20 PM IST.
 - [x] **Repository Submission**: Clean, organized repository with collaborative commits across branches.
-- [x] **Comprehensive README**: Includes Team Name (`Arjuna_1`), Team Members, Project Overview, Tech Stack Justification (5% weightage), Live Deployment URL, and Demo Video Link.
+- [x] **Comprehensive README**: Includes Team Name (`Arjuna_1`), Team Members, Project Overview, Tech Stack Justification (5% weightage), Live Deployment URL, and Demo Video Walkthrough.
 - [x] **Production Deployment**: Verified live public deployment on Vercel with zero serverless database lockups.
 - [x] **Enterprise DevOps**: Multi-stage Docker containerization, Jenkins declarative pipeline, and AWS EKS Kubernetes manifests with feature-segregated ReplicaSets.
 - [x] **Functional Completeness**: Real-time GitHub telemetry, commit timeline, language breakdown, contributor leaderboard, hot files, README viewer, and Arjuna Sarthi assistant.
 - [x] **Code Quality**: Zero ESLint errors, zero TypeScript warnings, 100% passing Vitest test suite (`27 / 27`).
+- [x] **Security Rating**: SonarCloud Quality Gate PASSED with 0 Security Hotspots and 0 Vulnerabilities.
 
 ---
 
