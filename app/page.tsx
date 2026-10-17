@@ -1,4 +1,4 @@
-// [stage-41] feat(dashboard): wire App Router page.tsx with concurrent API fetch orchestration
+// [stage-42] feat(dashboard): sync active repository state with URL searchParams for shareable links
 "use client";
 
 import { useState, useEffect, useCallback, Suspense } from "react";
