@@ -1,4 +1,4 @@
-/* [stage-58] fix(layout): eliminate empty bottom whitespace in Languages Breakdown card */
+/* [stage-59] fix(layout): fix Hot Files container height and padding to prevent file clipping */
 @import "tailwindcss";
 
 /* ── Light Mode Base (Default) ── */
