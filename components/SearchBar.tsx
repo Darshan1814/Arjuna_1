@@ -1,4 +1,3 @@
-// [stage-43] feat(dashboard): integrate SQLite history chips directly into search experience
 "use client";
 
 import { Search, History, ArrowRight, Sparkles } from "lucide-react";
