@@ -1,4 +1,4 @@
-/* [stage-2] style: configure base HSL design system tokens, typography and dark mode CSS variables */
+/* [stage-20] style: add micro-animations, glassmorphism cards, and warm amber orbital glow effects */
 @import "tailwindcss";
 
 /* ── Light Mode Base (Default) ── */
