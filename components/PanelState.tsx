@@ -1,4 +1,3 @@
-// [stage-7] feat: create PanelState skeleton loader, error banners, and empty state components
 "use client";
 
 import { AlertCircle, Loader2, RefreshCw, Clock } from "lucide-react";
