@@ -1,4 +1,3 @@
-// [stage-12] feat(analytics): implement LanguageBreakdown donut chart with percentage byte distribution
 "use client";
 
 import { useMemo } from "react";
