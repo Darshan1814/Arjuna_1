@@ -1,4 +1,3 @@
-// [stage-50] test(unit): create format test suite validating compact numbers, bytes, and time
 import { describe, it, expect } from "vitest";
 import {
   formatRelativeTime,
