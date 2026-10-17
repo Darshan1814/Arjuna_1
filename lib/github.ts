@@ -1,4 +1,3 @@
-// [stage-6] feat: configure GitHub REST API client with authorization header injection
 import {
   GITHUB_API_BASE,
   CACHE_SECONDS,
