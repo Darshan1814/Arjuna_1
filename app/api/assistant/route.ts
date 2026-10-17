@@ -1,4 +1,3 @@
-// [stage-60] fix(assistant): sanitize special characters (&) and conversational prefixes in search
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { GITHUB_API_BASE } from "@/lib/constants";

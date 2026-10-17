@@ -1,4 +1,4 @@
-// [stage-24] feat(assistant): add quick suggested topics for AI agents, Rust, and modern architectures
+// [stage-61] fix(assistant): strip markdown asterisks and bold tags from AI advice output
 "use client";
 
 import { useState, useCallback } from "react";
