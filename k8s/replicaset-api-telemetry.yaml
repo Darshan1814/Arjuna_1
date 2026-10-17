@@ -26,9 +26,10 @@ spec:
         app.kubernetes.io/component: telemetry-api
         feature: git-telemetry-engine
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: gitstory-api
-          image: arjuna-1/gitstory:latest
+          image: arjuna-1/gitstory:1.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -42,9 +43,11 @@ spec:
             requests:
               cpu: "300m"
               memory: "384Mi"
+              ephemeral-storage: "512Mi"
             limits:
               cpu: "750m"
               memory: "768Mi"
+              ephemeral-storage: "1Gi"
           livenessProbe:
             httpGet:
               path: /api/repo?name=facebook/react
@@ -62,3 +65,6 @@ spec:
             runAsUser: 1001
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL

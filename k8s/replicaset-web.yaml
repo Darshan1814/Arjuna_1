@@ -26,9 +26,10 @@ spec:
         app.kubernetes.io/component: web-ui
         feature: dashboard-frontend
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: gitstory-web
-          image: arjuna-1/gitstory:latest
+          image: arjuna-1/gitstory:1.0.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -42,9 +43,11 @@ spec:
             requests:
               cpu: "250m"
               memory: "256Mi"
+              ephemeral-storage: "512Mi"
             limits:
               cpu: "500m"
               memory: "512Mi"
+              ephemeral-storage: "1Gi"
           livenessProbe:
             httpGet:
               path: /
@@ -62,3 +65,6 @@ spec:
             runAsUser: 1001
             readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
