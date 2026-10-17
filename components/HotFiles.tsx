@@ -1,4 +1,3 @@
-// [stage-14] feat(analytics): create HotFiles component highlighting frequently modified architectural files
 "use client";
 
 import { FileCode, Flame, Info } from "lucide-react";

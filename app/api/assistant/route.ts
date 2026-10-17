@@ -1,4 +1,3 @@
-// [stage-38] feat(api): implement /api/assistant route with GitHub search and AI topic advice
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { GITHUB_API_BASE } from "@/lib/constants";

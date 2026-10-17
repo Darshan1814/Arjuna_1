@@ -1,4 +1,3 @@
-// [stage-46] perf: implement Suspense boundaries for instant skeleton loading on initial visit
 "use client";
 
 import { useState, useEffect, useCallback, Suspense } from "react";
