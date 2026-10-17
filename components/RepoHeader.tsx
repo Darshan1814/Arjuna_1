@@ -1,4 +1,4 @@
-// [stage-10] feat(ui): implement RepoHeader with on-screen interactive telemetry badges
+// [stage-27] feat(header): add clickable links to repository commit logs, issues, and release tags
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
