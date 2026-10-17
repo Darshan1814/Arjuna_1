@@ -1,4 +1,4 @@
-// [stage-9] feat(ui): build interactive SearchBar component with URL query synchronization
+// [stage-43] feat(dashboard): integrate SQLite history chips directly into search experience
 "use client";
 
 import { Search, History, ArrowRight, Sparkles } from "lucide-react";
