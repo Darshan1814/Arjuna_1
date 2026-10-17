@@ -1,4 +1,4 @@
-// [stage-21] feat(assistant): implement 1-click repo loading action from Arjuna Sarthi recommendations
+// [stage-24] feat(assistant): add quick suggested topics for AI agents, Rust, and modern architectures
 "use client";
 
 import { useState, useCallback } from "react";
