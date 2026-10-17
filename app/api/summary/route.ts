@@ -1,4 +1,3 @@
-// [stage-32] feat(api): build /api/summary route powered by Groq Cloud ultra-fast inference
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { parseRepoInput } from "@/lib/parse-repo";
