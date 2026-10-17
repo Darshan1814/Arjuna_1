@@ -1,4 +1,3 @@
-// [stage-49] test(unit): create parse-repo test suite verifying URL patterns and edge cases
 import { describe, it, expect } from "vitest";
 import { parseRepoInput } from "@/lib/parse-repo";
 
