@@ -1,4 +1,3 @@
-// [stage-18] feat(docs): integrate AI executive brief tabs in ReadmeViewer with structured pillars
 "use client";
 
 import { useState, useCallback } from "react";
