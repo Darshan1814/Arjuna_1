@@ -1,4 +1,3 @@
-// [stage-11] feat(analytics): build CommitActivity 52-week velocity timeline using Recharts
 "use client";
 
 import { useState, useMemo } from "react";
