@@ -1,4 +1,4 @@
-/* [stage-2] style: configure base HSL design system tokens, typography and dark mode CSS variables */
+/* [stage-26] style: enhance telemetry stat pills with high-contrast font and subtle border hover states */
 @import "tailwindcss";
 
 /* ── Light Mode Base (Default) ── */
